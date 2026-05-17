@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5 reveal">
+                <div class="auth-card">
+                    <div class="auth-icon"><i class="fas fa-user-lock"></i></div>
+                    <h2 class="auth-title">Добро пожаловать!</h2>
+                    <p class="auth-subtitle">Войдите в личный кабинет</p>
+
+                    <form method="POST">
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" name="email" placeholder="mail@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Пароль</label>
+                            <input type="password" class="form-input" name="password" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="consent" required>
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">Я даю согласие на <a href="#" style="color: var(--accent);">обработку персональных данных</a></span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn-auth">
+                            <i class="fas fa-arrow-right-to-bracket"></i>
+                            Войти
+                        </button>
+                    </form>
+
+                    <div class="auth-footer">
+                        <p>Ещё нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Анимация появления
+document.addEventListener('DOMContentLoaded', function() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+});
+</script>
+{% endblock %}

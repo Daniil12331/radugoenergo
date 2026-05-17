@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5 reveal">
+                <div class="auth-card">
+                    <div class="auth-icon"><i class="fas fa-user-plus"></i></div>
+                    <h2 class="auth-title">Создать аккаунт</h2>
+                    <p class="auth-subtitle">Зарегистрируйтесь в личном кабинете</p>
+
+                    <form method="POST">
+                        <div class="form-group">
+                            <label class="form-label">Ваше имя</label>
+                            <input type="text" class="form-input" name="name" placeholder="Иван Иванов" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" name="email" placeholder="mail@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Телефон</label>
+                            <input type="tel" class="form-input" name="phone" placeholder="+7 (___) ___-__-__">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Пароль</label>
+                            <input type="password" class="form-input" name="password" placeholder="Минимум 6 символов" required minlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="consent" required>
+                                <span class="checkbox-custom"></span>
+                                <span class="checkbox-text">Я даю согласие на <a href="#" style="color: var(--accent);">обработку персональных данных</a></span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn-auth">
+                            <i class="fas fa-user-check"></i>
+                            Зарегистрироваться
+                        </button>
+                    </form>
+
+                    <div class="auth-footer">
+                        <p>Уже есть аккаунт? <a href="{{ url_for('login') }}">Войти</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+// Анимация появления
+document.addEventListener('DOMContentLoaded', function() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+});
+</script>
+{% endblock %}
