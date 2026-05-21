@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="calc-section">
+    <div class="container">
+        <div class="calc-header reveal">
+            <div class="calc-icon"><i class="fas fa-calculator"></i></div>
+            <div class="section-label" style="margin: 0 auto 16px;">Быстрый расчёт</div>
+            <h2 class="section-title">
+                Калькулятор <span class="gradient-text">водоснабжения</span>
+            </h2>
+            <p class="section-desc">
+                Рассчитайте сумму к оплате за холодное или горячее водоснабжение<br>
+                по показаниям счётчиков.
+            </p>
+        </div>
+
+        <!-- Вкладки -->
+        <div class="calc-tabs reveal reveal-delay-1" role="tablist">
+            <button class="calc-tab active" id="cold-tab" data-bs-toggle="pill" data-bs-target="#cold" type="button" role="tab">
+                <i class="fas fa-snowflake"></i>
+                Холодная вода
+            </button>
+            <button class="calc-tab" id="hot-tab" data-bs-toggle="pill" data-bs-target="#hot" type="button" role="tab">
+                <i class="fas fa-fire"></i>
+                Горячая вода
+            </button>
+        </div>
+
+        <div class="tab-content" id="calcTabsContent">
+            <!-- Холодная вода -->
+            <div class="tab-pane fade show active" id="cold" role="tabpanel">
+                <div class="row justify-content-center reveal reveal-delay-2">
+                    <div class="col-lg-8">
+                        <div class="calc-card">
+                            <h3><i class="fas fa-snowflake"></i> Расчёт — холодная вода</h3>
+                            <form id="coldForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Предыдущие показания, м³</label>
+                                            <input type="number" step="0.001" class="calc-input" id="cold_old" min="0" value="0" placeholder="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Текущие показания, м³</label>
+                                            <input type="number" step="0.001" class="calc-input" id="cold_new" min="0" value="0" placeholder="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label class="form-label">Тариф за 1 м³, ₽</label>
+                                            <input type="number" step="0.01" class="calc-input" id="cold_tariff" value="42.30">
+                                            <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; display: block;">Актуальный тариф на холодное водоснабжение</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-end">
+                                        <div class="form-group" style="width: 100%;">
+                                            <div class="form-check-custom" style="margin-bottom: 0;">
+                                                <input type="checkbox" id="cold_nds" checked>
+                                                <label for="cold_nds">Включая НДС 20%</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="calculateWater('cold')" class="btn-auth" style="margin-top: 24px;">
+                                    <i class="fas fa-calculator"></i>
+                                    Рассчитать сумму к оплате
+                                </button>
+                            </form>
+
+                            <div id="cold_resultBlock" class="calc-result-block d-none" style="margin-top: 28px;">
+                                <div class="calc-result-row">
+                                    <span class="calc-result-label">Потреблено за период</span>
+                                    <span class="calc-result-value" id="cold_resultConsumption">0 м³</span>
+                                </div>
+                                <div class="calc-result-row">
+                                    <span class="calc-result-label">Тариф</span>
+                                    <span class="calc-result-value" id="cold_resultTariff">42.30 ₽/м³</span>
+                                </div>
+                                <div class="calc-result-row">
+                                    <span class="calc-result-label">Итоговая сумма к оплате</span>
+                                    <span class="calc-result-value highlight" id="cold_resultPrice">0 ₽</span>
+                                </div>
+                                <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 16px; margin-bottom: 0; text-align: center;">
+                                    * Расчёт является предварительным. Окончательная сумма указывается в квитанции.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Горячая вода -->
+            <div class="tab-pane fade" id="hot" role="tabpanel">
+                <div class="row justify-content-center reveal reveal-delay-2">
+                    <div class="col-lg-8">
+                        <div class="calc-card">
+                            <h3><i class="fas fa-fire"></i> Расчёт — горячая вода</h3>
+                            <form id="hotForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Предыдущие показания, м³</label>
+                                            <input type="number" step="0.001" class="calc-input" id="hot_old" min="0" value="0" placeholder="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Текущие показания, м³</label>
+                                            <input type="number" step="0.001" class="calc-input" id="hot_new" min="0" value="0" placeholder="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label class="form-label">Тариф за 1 м³, ₽</label>
+                                            <input type="number" step="0.01" class="calc-input" id="hot_tariff" value="198.50">
+                                            <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; display: block;">Актуальный тариф на горячее водоснабжение</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-end">
+                                        <div class="form-group" style="width: 100%;">
+                                            <div class="form-check-custom" style="margin-bottom: 0;">
+                                                <input type="checkbox" id="hot_nds" checked>
+                                                <label for="hot_nds">Включая НДС 20%</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="calculateWater('hot')" class="btn-auth" style="margin-top: 24px; background: linear-gradient(135deg, #dc3545, #b02a37);">
+                                    <i class="fas fa-calculator"></i>
+                                    Рассчитать сумму к оплате
+                                </button>
+                            </form>
+
+                            <div id="hot_resultBlock" class="calc-result-block d-none" style="margin-top: 28px; background: rgba(220, 53, 69, 0.06); border-color: rgba(220, 53, 69, 0.12);">
+                                <div class="calc-result-row">
+                                    <span class="calc-result-label">Потреблено за период</span>
+                                    <span class="calc-result-value" id="hot_resultConsumption">0 м³</span>
+                                </div>
+                                <div class="calc-result-row">
+                                    <span class="calc-result-label">Тариф</span>
+                                    <span class="calc-result-value" id="hot_resultTariff">198.50 ₽/м³</span>
+                                </div>
+                                <div class="calc-result-row">
+                                    <span class="calc-result-label">Итоговая сумма к оплате</span>
+                                    <span class="calc-result-value highlight" id="hot_resultPrice" style="color: #f87171;">0 ₽</span>
+                                </div>
+                                <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 16px; margin-bottom: 0; text-align: center;">
+                                    * Расчёт является предварительным. Окончательная сумма указывается в квитанции.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function calculateWater(type) {
+    const old_val  = parseFloat(document.getElementById(type + '_old').value)    || 0;
+    const new_val  = parseFloat(document.getElementById(type + '_new').value)    || 0;
+    const tariff   = parseFloat(document.getElementById(type + '_tariff').value) || 0;
+    const withNds  = document.getElementById(type + '_nds').checked;
+
+    if (new_val < old_val) {
+        alert('❌ Текущие показания не могут быть меньше предыдущих!');
+        return;
+    }
+
+    const consumption = new_val - old_val;
+    let price = consumption * tariff;
+
+    if (withNds) {
+        price = price * 1.2;
+    }
+
+    document.getElementById(type + '_resultConsumption').textContent = consumption.toFixed(3) + ' м³';
+    document.getElementById(type + '_resultTariff').textContent = tariff.toFixed(2) + ' ₽/м³';
+    document.getElementById(type + '_resultPrice').textContent = Math.round(price).toLocaleString('ru-RU') + ' ₽';
+    document.getElementById(type + '_resultBlock').classList.remove('d-none');
+}
+
+// Анимация появления
+document.addEventListener('DOMContentLoaded', function() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+});
+</script>
+{% endblock %}

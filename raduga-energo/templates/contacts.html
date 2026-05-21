@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="contacts-section">
+    <div class="container">
+        <div class="text-center mb-5 reveal">
+            <div class="calc-icon" style="margin: 0 auto 20px;"><i class="fas fa-address-card"></i></div>
+            <div class="section-label" style="margin: 0 auto 16px;">Свяжитесь с нами</div>
+            <h2 class="section-title">
+                Наши <span class="gradient-text">контакты</span>
+            </h2>
+            <p class="section-desc">
+                Мы всегда на связи и готовы ответить на ваши вопросы.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6 reveal reveal-delay-1">
+                <div class="contacts-card">
+                    <h3><i class="fas fa-building"></i> Реквизиты компании</h3>
+                    {% if contact %}
+                    <ul class="contact-info-list">
+                        <li>
+                            <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div>
+                                <span class="contact-info-label">Адрес</span>
+                                <span class="contact-info-value">{{ contact.address }}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="contact-info-icon"><i class="fas fa-phone-alt"></i></div>
+                            <div>
+                                <span class="contact-info-label">Телефон</span>
+                                <span class="contact-info-value">{{ contact.phone }}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="contact-info-icon"><i class="fas fa-envelope"></i></div>
+                            <div>
+                                <span class="contact-info-label">Email</span>
+                                <span class="contact-info-value">{{ contact.email }}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="contact-info-icon"><i class="fas fa-clock"></i></div>
+                            <div>
+                                <span class="contact-info-label">Режим работы</span>
+                                <span class="contact-info-value">{{ contact.work_hours }}</span>
+                            </div>
+                        </li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-6 reveal reveal-delay-2">
+                <div class="contacts-card">
+                    <h3><i class="fas fa-paper-plane"></i> Написать нам</h3>
+                    <form id="contactForm" class="contacts-form">
+                        <div class="mb-3">
+                            <label class="form-label">Ваше имя *</label>
+                            <input type="text" class="form-input" name="name" placeholder="Иван Иванов" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Телефон *</label>
+                            <input type="tel" class="form-input" name="phone" placeholder="+7 (___) ___-__-__" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" name="email" placeholder="mail@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Сообщение</label>
+                            <textarea class="form-input" name="message" rows="4" placeholder="Ваше сообщение..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-auth">
+                            <i class="fas fa-paper-plane"></i>
+                            Отправить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData);
+    
+    await fetch('/send_request', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    });
+    
+    alert('✅ Сообщение отправлено! Мы свяжемся с вами в ближайшее время.');
+    this.reset();
+});
+
+// Анимация появления
+document.addEventListener('DOMContentLoaded', function() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+});
+</script>
+{% endblock %}
